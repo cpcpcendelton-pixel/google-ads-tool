@@ -1,3 +1,10 @@
+# Google Ads credentials — NEVER commit
+google-ads.yaml
+client_secret.json
+*.json
+!google-ads.yaml.example
+.env
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
