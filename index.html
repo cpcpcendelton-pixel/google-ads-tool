@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>google-ads-tool — Internal Google Ads API automation</title>
+<style>
+  :root{
+    --ink:#14202b;
+    --ink-soft:#3d4f5c;
+    --muted:#6b7c88;
+    --line:#dde4e9;
+    --paper:#f7f9fa;
+    --card:#ffffff;
+    --accent:#1f6feb;
+    --accent-soft:#eaf1fe;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:860px;margin:0 auto;padding:0 24px;}
+  code,.mono{font-family:"SF Mono",ui-monospace,"Cascadia Code",Consolas,monospace;}
+
+  header{
+    border-bottom:1px solid var(--line);
+    background:var(--card);
+  }
+  .top{
+    display:flex;align-items:center;gap:12px;
+    padding:20px 24px;max-width:860px;margin:0 auto;
+  }
+  .dot{width:11px;height:11px;border-radius:50%;background:var(--accent);flex:none;}
+  .top b{font-size:15px;letter-spacing:-.01em;}
+  .top span{color:var(--muted);font-size:13px;margin-left:auto;}
+
+  .hero{padding:64px 0 48px;}
+  .eyebrow{
+    font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--accent);font-weight:600;margin-bottom:18px;
+  }
+  h1{
+    font-size:40px;line-height:1.12;letter-spacing:-.025em;
+    margin:0 0 20px;font-weight:700;max-width:18ch;
+  }
+  .lede{font-size:19px;color:var(--ink-soft);max-width:62ch;margin:0;}
+
+  section{padding:40px 0;border-top:1px solid var(--line);}
+  h2{
+    font-size:13px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--muted);font-weight:600;margin:0 0 22px;
+  }
+  h3{font-size:18px;margin:0 0 8px;letter-spacing:-.01em;}
+  p{margin:0 0 16px;color:var(--ink-soft);}
+  p:last-child{margin-bottom:0;}
+
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+  .card{
+    background:var(--card);border:1px solid var(--line);
+    border-radius:10px;padding:22px 22px 20px;
+  }
+  .card .tag{
+    font-size:11px;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--accent);font-weight:600;margin-bottom:10px;
+  }
+  .card p{font-size:14.5px;margin:0;}
+
+  ul.flow{list-style:none;margin:0;padding:0;counter-reset:step;}
+  ul.flow li{
+    position:relative;padding:0 0 22px 46px;color:var(--ink-soft);
+  }
+  ul.flow li:before{
+    counter-increment:step;content:counter(step);
+    position:absolute;left:0;top:-2px;
+    width:30px;height:30px;border-radius:7px;
+    background:var(--accent-soft);color:var(--accent);
+    font-size:13px;font-weight:600;
+    display:flex;align-items:center;justify-content:center;
+    font-family:"SF Mono",ui-monospace,monospace;
+  }
+  ul.flow li:after{
+    content:"";position:absolute;left:14px;top:30px;bottom:6px;
+    width:1px;background:var(--line);
+  }
+  ul.flow li:last-child{padding-bottom:0;}
+  ul.flow li:last-child:after{display:none;}
+  ul.flow b{color:var(--ink);font-weight:600;}
+
+  table{width:100%;border-collapse:collapse;font-size:14.5px;}
+  td{padding:12px 0;border-bottom:1px solid var(--line);vertical-align:top;color:var(--ink-soft);}
+  tr:last-child td{border-bottom:none;}
+  td.k{
+    width:38%;color:var(--ink);font-weight:600;padding-right:20px;
+  }
+  td.k code{font-size:13px;background:var(--accent-soft);color:var(--accent);
+    padding:2px 6px;border-radius:4px;}
+
+  .scope{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;}
+  .scope span{
+    font-size:13px;border:1px solid var(--line);border-radius:6px;
+    padding:6px 11px;color:var(--ink-soft);background:var(--card);
+  }
+  .scope span.no{color:var(--muted);opacity:.7;text-decoration:line-through;}
+
+  .note{
+    background:var(--accent-soft);border:1px solid #cfe0fb;
+    border-radius:10px;padding:18px 20px;font-size:14.5px;color:var(--ink-soft);
+  }
+  .note b{color:var(--ink);}
+
+  footer{
+    border-top:1px solid var(--line);padding:28px 0 56px;
+    color:var(--muted);font-size:13px;
+  }
+  footer a{color:var(--accent);text-decoration:none;}
+
+  @media(max-width:640px){
+    h1{font-size:30px;}
+    .lede{font-size:17px;}
+    .grid{grid-template-columns:1fr;}
+    td.k{width:46%;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="top">
+    <span class="dot"></span>
+    <b>google-ads-tool</b>
+    <span>Independent developer · Internal use</span>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="hero">
+    <div class="eyebrow">Google Ads API integration</div>
+    <h1>Internal automation for my own Google Ads accounts.</h1>
+    <p class="lede">
+      A command-line tool I develop and operate to report on and manage the
+      advertising campaigns in my own Google Ads accounts, all held under a
+      single manager account (MCC). It replaces repetitive manual work in the
+      Google Ads interface with scheduled, rule-based automation.
+    </p>
+  </div>
+
+  <section>
+    <h2>Business model</h2>
+    <p>
+      I am an independent developer who runs advertising for my own accounts.
+      I am not an agency and I do not manage advertising for external clients.
+      The tool described here is built solely for my own use: it reads the
+      performance of my campaigns and adjusts them according to rules I define.
+    </p>
+    <p>
+      There is no product, no resale, and no redistribution. Google Ads API
+      data never leaves my own environment and is never shared with or sold to
+      any third party. The tool exists to save my own time and to make my
+      campaign management consistent and measurable.
+    </p>
+  </section>
+
+  <section>
+    <h2>What the tool does</h2>
+    <div class="grid">
+      <div class="card">
+        <div class="tag">Reporting</div>
+        <p>Pulls daily performance — spend, conversions, and cost per
+        acquisition — for each campaign and account under my manager account.</p>
+      </div>
+      <div class="card">
+        <div class="tag">Campaign management</div>
+        <p>Adjusts daily budgets, target CPA, and the on/off state of campaigns
+        and ad groups based on internal performance thresholds.</p>
+      </div>
+      <div class="card">
+        <div class="tag">Campaign creation</div>
+        <p>Creates campaigns with their budgets, ad groups, and ads from a
+        predefined configuration, so launches are consistent and repeatable.</p>
+      </div>
+      <div class="card">
+        <div class="tag">Scheduling</div>
+        <p>Runs on a fixed schedule. Every change is logged, and sensitive
+        actions run with a safety check before anything is applied.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>How a typical run works</h2>
+    <ul class="flow">
+      <li><b>Authenticate</b> against my manager account using OAuth credentials
+        stored locally.</li>
+      <li><b>Read</b> the enabled accounts under the manager account and pull
+        recent performance for each campaign.</li>
+      <li><b>Evaluate</b> each campaign against my own thresholds — for example,
+        whether cost per install is within target.</li>
+      <li><b>Act</b> where a threshold is exceeded: adjust the budget or target
+        CPA, pause an underperforming ad group, or flag the campaign. Every
+        action is recorded.</li>
+      <li><b>Log</b> the outcome of the run so I can review what changed and why.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Google Ads API use</h2>
+    <table>
+      <tr>
+        <td class="k">Account structure</td>
+        <td>One manager account (MCC) with my own client accounts linked
+          beneath it. A single developer token is used for all of them.</td>
+      </tr>
+      <tr>
+        <td class="k">Reading data <code>GoogleAdsService</code></td>
+        <td>GAQL queries for campaign, ad group, and asset performance
+          (cost, impressions, clicks, conversions, cost per acquisition).</td>
+      </tr>
+      <tr>
+        <td class="k">Budgets <code>CampaignBudgetService</code></td>
+        <td>Create budgets and adjust daily budget amounts.</td>
+      </tr>
+      <tr>
+        <td class="k">Campaigns <code>CampaignService</code></td>
+        <td>Create campaigns, set and adjust target CPA, and change campaign
+          status.</td>
+      </tr>
+      <tr>
+        <td class="k">Ad groups &amp; ads</td>
+        <td>Create ad groups and ads when launching, and change ad group status
+          during optimization.</td>
+      </tr>
+    </table>
+  </section>
+
+  <section>
+    <h2>Scope of access</h2>
+    <p>The tool provides these capabilities, and only these:</p>
+    <div class="scope">
+      <span>Account management</span>
+      <span>Campaign creation</span>
+      <span>Campaign management</span>
+      <span>Reporting</span>
+      <span class="no">Account creation</span>
+      <span class="no">Keyword planning</span>
+      <span class="no">External access</span>
+    </div>
+  </section>
+
+  <section>
+    <h2>Data handling</h2>
+    <div class="note">
+      <p>All API data is used only to manage my own accounts. It is processed
+      in memory and, at most, written to a local file for my own review.
+      <b>Nothing is resold, redistributed, or shared with any third party</b>,
+      and no external users have access to the tool.</p>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap" style="padding:0;">
+      google-ads-tool · An internal Google Ads API tool by an independent developer.<br>
+      Source: <a href="https://github.com/cpcpcendelton-pixel/google-ads-tool">github.com/cpcpcendelton-pixel/google-ads-tool</a>
+    </div>
+  </footer>
+
+</div>
+</body>
+</html>
